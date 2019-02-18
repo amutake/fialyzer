@@ -93,4 +93,4 @@ workflows:
             - satysfi
           filters:
             branches:
-              only: master
+              only: satysfi
