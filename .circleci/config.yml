@@ -53,22 +53,22 @@ jobs:
           name: Build PDF
           command: eval $(opam env) && satysfi docs/derivation-rules.saty
       - persist_to_workspace:
-          root: docs
-          paths: "*.pdf"
+          root: .
+          paths: docs/*.pdf
   docs-deploy:
     docker:
       - image: node:8.10.0
     steps:
       - checkout
       - attach_workspace:
-          at: _build/default
-      - attach_workspace:
-          at: docs
+          at: workspace
       - run:
           name: ls
           command: |
-            ls docs
-            ls _build/default/_doc/_html
+            ls workspace
+            ls workspace/docs
+            ls workspace/_doc/_html
+            ls workspace/test
       - run:
           name: Install gh-pages and configure dependencies
           command: |
@@ -81,8 +81,8 @@ jobs:
       - run:
           name: Deploy docs to gh-pages branch
           command: |
-            gh-pages --message "[skip ci] doc upload" --dist _build/default/_doc/_html --dest odoc
-            gh-pages --message "[skip ci] doc upload" --dist docs/*.pdf --dest docs
+            gh-pages --message "[skip ci] doc upload" --dist workspace/_doc/_html --dest odoc
+            gh-pages --message "[skip ci] doc upload" --dist workspace/docs/*.pdf --dest docs
 workflows:
   version: 2
   all:
