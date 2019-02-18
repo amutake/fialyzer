@@ -51,7 +51,7 @@ jobs:
       - checkout
       - run:
           name: Build PDF
-          command: satysfi docs/derivation-rules.saty
+          command: eval $(opam env) && satysfi docs/derivation-rules.saty
       - persist_to_workspace:
           root: .
           paths: docs
@@ -90,6 +90,7 @@ workflows:
       - docs-deploy:
           requires:
             - build
+            - satysfi
           filters:
             branches:
               only: master
