@@ -43,6 +43,18 @@ jobs:
       - persist_to_workspace:
           root: _build/default
           paths: _doc/_html
+  build:
+    working_directory: ~/fialyzer
+    docker:
+      - image: amutake/satysfi:0.0.3-dev2019.02.13
+    steps:
+      - checkout
+      - run:
+          name: Build PDF
+          command: satysfi docs/derivation-rules.saty
+      - persist_to_workspace:
+          root: .
+          paths: docs
   docs-deploy:
     docker:
       - image: node:8.10.0
@@ -50,6 +62,8 @@ jobs:
       - checkout
       - attach_workspace:
           at: _build/default
+      - attach_workspace:
+          at: docs
       - run:
           name: Install gh-pages and configure dependencies
           command: |
@@ -63,6 +77,7 @@ jobs:
           name: Deploy docs to gh-pages branch
           command: |
             gh-pages --message "[skip ci] doc upload" --dist _build/default/_doc/_html --dest odoc
+            gh-pages --message "[skip ci] doc upload" --dist docs/*.pdf --dest docs
 workflows:
   version: 2
   all:
