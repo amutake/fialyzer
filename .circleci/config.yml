@@ -53,8 +53,8 @@ jobs:
           name: Build PDF
           command: eval $(opam env) && satysfi docs/derivation-rules.saty
       - persist_to_workspace:
-          root: .
-          paths: docs
+          root: docs
+          paths: "*.pdf"
   docs-deploy:
     docker:
       - image: node:8.10.0
